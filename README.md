@@ -32,6 +32,29 @@ cmake -S . -B build
 cmake --build build -j2
 ```
 
+## Install
+
+Install into the default system prefix:
+
+```bash
+sudo cmake --install build
+```
+
+Or with Makefile generators:
+
+```bash
+cd build
+sudo make install
+```
+
+If you want to test installation without touching the system, stage it into a custom prefix:
+
+```bash
+cmake --install build --prefix /tmp/gitzip-install
+```
+
+After installation, `gitzip` is available on `PATH` if the chosen `bin` directory is on your shell path.
+
 ## Test
 
 Run the local regression script:
