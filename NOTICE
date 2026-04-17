@@ -1,0 +1,11 @@
+gitzip
+Copyright 2026 gitzip contributors
+
+This project is licensed under the Apache License, Version 2.0.
+
+This repository vendors the upstream LZMA SDK under:
+third_party/lzma-sdk-26.00/
+
+According to upstream documentation, the LZMA SDK is placed in the public domain.
+See:
+third_party/lzma-sdk-26.00/DOC/lzma-sdk.txt

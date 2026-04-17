@@ -1,0 +1,24 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Show toolchain versions
+        run: |
+          cmake --version
+          g++ --version
+          tar --version
+
+      - name: Run regression tests
+        run: bash scripts/test.sh
