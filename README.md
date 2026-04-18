@@ -1,5 +1,14 @@
 # gitzip
 
+> Copyright (C) 2026 gitzip contributors
+>
+> This file is part of gitzip.
+>
+> gitzip is free software: you can redistribute it and/or modify it under
+> the terms of the GNU General Public License as published by the Free Software
+> Foundation, either version 3 of the License, or (at your option) any later
+> version.
+
 `gitzip` is a C++17 archiver built on top of the vendored `LZMA SDK 26.00`.
 It reads `.gitignore` rules, filters the source tree, and creates archives
 without depending on a system-installed `7z` command.
@@ -121,6 +130,7 @@ Pass extra switches to the embedded 7-Zip core:
 - `--no-solid`: disable solid mode for `7z`
 - `--list-only`: print the filtered file list without archiving
 - `--verbose`: print ignored files and directories
+- `--version`: show version and license information
 - `-- <7zip switches...>`: pass raw switches to the embedded 7-Zip core
 - `--help`: show help
 
@@ -151,5 +161,5 @@ See:
 
 ## License
 
-This project is licensed under Apache 2.0.
-See [LICENSE](/home/li/Desktop/playspace/gitzip/LICENSE) and [NOTICE](/home/li/Desktop/playspace/gitzip/NOTICE).
+gitzip is licensed under GPLv3 or later.
+See [COPYING](/home/li/Desktop/playspace/gitzip/COPYING), [LICENSE](/home/li/Desktop/playspace/gitzip/LICENSE), and [NOTICE](/home/li/Desktop/playspace/gitzip/NOTICE).

@@ -1,7 +1,11 @@
-gitzip
-Copyright 2026 gitzip contributors
+Copyright (C) 2026 gitzip contributors
 
-This project is licensed under the Apache License, Version 2.0.
+gitzip
+
+This project is free software: you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
 This repository vendors the upstream LZMA SDK under:
 third_party/lzma-sdk-26.00/

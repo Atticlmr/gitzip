@@ -1,3 +1,20 @@
+// Copyright (C) 2026 gitzip contributors
+//
+// This file is part of gitzip.
+//
+// gitzip is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// gitzip is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with gitzip.  If not, see <https://www.gnu.org/licenses/>.
+
 #include "gitignore.h"
 
 #include <algorithm>
@@ -34,6 +51,11 @@ CStdOutStream* g_StdStream = nullptr;
 CStdOutStream* g_ErrStream = nullptr;
 
 namespace {
+
+constexpr const char* kProgramName = "gitzip";
+constexpr const char* kProgramVersion = GITZIP_VERSION;
+constexpr const char* kHomePage = GITZIP_HOME_PAGE;
+constexpr const char* kBugReports = GITZIP_BUG_REPORTS;
 
 struct Options {
     fs::path sourceDir = ".";
@@ -174,11 +196,10 @@ bool containsGitMetadataPath(const fs::path& relativePath) {
 
 void printUsage() {
     std::cout
-        << "gitzip\n"
+        << kProgramName << "\n"
         << "Archive a directory using layered .gitignore rules.\n\n"
         << "Usage:\n"
-        << "  gitzip [options]\n"
-        << "  gitzip -h | --help\n\n"
+        << "  " << kProgramName << " [OPTION]...\n\n"
         << "Main operations:\n"
         << "  archive                Default behavior. Filter files and create an archive.\n"
         << "  list                   Use --list-only to print the filtered file set only.\n\n"
@@ -193,6 +214,7 @@ void printUsage() {
         << "  --no-solid             Disable solid mode for 7z.\n"
         << "  --list-only            Show files that would be archived and exit.\n"
         << "  --verbose              Also print ignored files and directories.\n"
+        << "  --version              Output version information and exit.\n"
         << "  -- <7zip switches...>  Pass raw switches to the embedded 7-Zip core.\n"
         << "  -h, --help             Show this help page.\n\n"
         << "Behavior notes:\n"
@@ -201,11 +223,23 @@ void printUsage() {
         << "  - xz output is produced as a .tar.xz archive.\n"
         << "  - zip is not supported in this repository.\n\n"
         << "Examples:\n"
-        << "  gitzip\n"
-        << "  gitzip --source . --output release.7z --level 9 --threads 8\n"
-        << "  gitzip --source . --format xz --output release.tar.xz\n"
-        << "  gitzip --list-only --verbose\n"
-        << "  gitzip --output release.7z -- -m0=lzma2 -mx=9 -mfb=273\n";
+        << "  " << kProgramName << "\n"
+        << "  " << kProgramName << " --source . --output release.7z --level 9 --threads 8\n"
+        << "  " << kProgramName << " --source . --format xz --output release.tar.xz\n"
+        << "  " << kProgramName << " --list-only --verbose\n"
+        << "  " << kProgramName << " --output release.7z -- -m0=lzma2 -mx=9 -mfb=273\n\n"
+        << "Report bugs to: " << kBugReports << '\n'
+        << kProgramName << " home page: <" << kHomePage << ">\n"
+        << "General help using GNU software: <https://www.gnu.org/gethelp/>\n";
+}
+
+void printVersion() {
+    std::cout
+        << kProgramName << ' ' << kProgramVersion << '\n'
+        << "Copyright (C) 2026 gitzip contributors\n"
+        << "License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>.\n"
+        << "This is free software: you are free to change and redistribute it.\n"
+        << "There is NO WARRANTY, to the extent permitted by law.\n";
 }
 
 Options parseArguments(int argc, char* argv[]) {
@@ -250,6 +284,9 @@ Options parseArguments(int argc, char* argv[]) {
             options.verbose = true;
         } else if (arg == "--help" || arg == "-h") {
             printUsage();
+            std::exit(0);
+        } else if (arg == "--version") {
+            printVersion();
             std::exit(0);
         } else {
             throw std::runtime_error("Unknown argument: " + arg);
@@ -552,7 +589,7 @@ int runArchive(const Options& options, const std::vector<fs::path>& files) {
     const TempFile listFile = writeListFile(files);
     std::optional<TempFile> tarFile;
     std::vector<std::string> sdkArgs{
-        "gitzip",
+        kProgramName,
         "a",
         "-y",
         options.archiveType == "xz" ? "-txz" : "-t7z"

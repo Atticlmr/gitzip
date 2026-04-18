@@ -1,3 +1,20 @@
+# Copyright (C) 2026 gitzip contributors
+#
+# This file is part of gitzip.
+#
+# gitzip is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# gitzip is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with gitzip.  If not, see <https://www.gnu.org/licenses/>.
+
 cmake_minimum_required(VERSION 3.16)
 
 project(gitzip VERSION 0.1.0 LANGUAGES CXX)
@@ -30,6 +47,13 @@ add_executable(gitzip
 )
 
 add_dependencies(gitzip lzma_sdk_core)
+
+target_compile_definitions(gitzip
+    PRIVATE
+        GITZIP_VERSION="${PROJECT_VERSION}"
+        GITZIP_HOME_PAGE="https://github.com/Atticlmr/gitzip"
+        GITZIP_BUG_REPORTS="https://github.com/Atticlmr/gitzip/issues"
+)
 
 target_include_directories(gitzip
     PRIVATE
@@ -68,6 +92,7 @@ install(TARGETS gitzip
 install(FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/README.md
     ${CMAKE_CURRENT_SOURCE_DIR}/LICENSE
+    ${CMAKE_CURRENT_SOURCE_DIR}/COPYING
     ${CMAKE_CURRENT_SOURCE_DIR}/NOTICE
     DESTINATION ${CMAKE_INSTALL_DATADIR}/gitzip
 )

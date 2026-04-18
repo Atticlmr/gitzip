@@ -1,4 +1,21 @@
 #!/usr/bin/env bash
+# Copyright (C) 2026 gitzip contributors
+#
+# This file is part of gitzip.
+#
+# gitzip is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# gitzip is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with gitzip.  If not, see <https://www.gnu.org/licenses/>.
+
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -9,7 +26,7 @@ SDK_7ZR="$ROOT_DIR/third_party/lzma-sdk-26.00/CPP/7zip/Bundles/Alone7z/_o/7zr"
 assert_contains() {
   local haystack="$1"
   local needle="$2"
-  if ! grep -Fqx "$needle" <<<"$haystack"; then
+  if ! grep -Fqx -- "$needle" <<<"$haystack"; then
     printf 'assertion failed: expected line not found: %s\n' "$needle" >&2
     exit 1
   fi
@@ -18,7 +35,7 @@ assert_contains() {
 assert_not_contains() {
   local haystack="$1"
   local needle="$2"
-  if grep -Fqx "$needle" <<<"$haystack"; then
+  if grep -Fqx -- "$needle" <<<"$haystack"; then
     printf 'assertion failed: unexpected line found: %s\n' "$needle" >&2
     exit 1
   fi
@@ -27,7 +44,7 @@ assert_not_contains() {
 assert_output_contains() {
   local haystack="$1"
   local needle="$2"
-  if ! grep -Fq "$needle" <<<"$haystack"; then
+  if ! grep -Fq -- "$needle" <<<"$haystack"; then
     printf 'assertion failed: expected output fragment not found: %s\n' "$needle" >&2
     exit 1
   fi
@@ -88,6 +105,17 @@ assert_not_contains "$LIST_OUTPUT" 'subrepo/build/generated.txt'
 assert_not_contains "$LIST_OUTPUT" 'subrepo/.git/config'
 assert_not_contains "$LIST_OUTPUT" 'subrepo2/.git'
 assert_not_contains "$LIST_OUTPUT" 'subrepo2/child-ignore.txt'
+
+printf '==> Validating help and version output\n'
+HELP_OUTPUT="$("$BIN" --help)"
+VERSION_OUTPUT="$("$BIN" --version)"
+
+assert_output_contains "$HELP_OUTPUT" '--version'
+assert_output_contains "$HELP_OUTPUT" 'Report bugs to: https://github.com/Atticlmr/gitzip/issues'
+assert_output_contains "$HELP_OUTPUT" 'General help using GNU software: <https://www.gnu.org/gethelp/>'
+
+assert_output_contains "$VERSION_OUTPUT" 'gitzip 0.1.0'
+assert_output_contains "$VERSION_OUTPUT" 'License GPLv3+: GNU GPL version 3 or later'
 
 printf '==> Creating and inspecting 7z archive\n'
 ARCHIVE_7Z="$WORK_DIR/test.7z"
